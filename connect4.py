@@ -1,10 +1,14 @@
-from board import Connect4Board, MAX_COL_COUNT
+from board import Connect4Board
 from random import randint
+import argparse
+
+DEFAULT_NUM_COL = 7
+DEFAULT_NUM_ROW = 6
 
 class Connect4():
-    def __init__(self):
+    def __init__(self, args):
         self._currPlayerId = 1
-        self._board = Connect4Board()
+        self._board = Connect4Board(args.numRows, args.numCols)
     
     def __str__(self):
         return str(self._board)
@@ -41,18 +45,16 @@ class Connect4():
         return self.getBoard().hasConnectFour()
 
     def getRandomAction(self):
-        return randint(0, MAX_COL_COUNT - 1)
+        return randint(0, self.getBoard().numCols() - 1)
 
-def main():
-    game = Connect4()
+def playGame(args):
+    game = Connect4(args)
     while True:
-        col = -1
-        try:
-            col = int(input(f"Enter col of move(1-{MAX_COL_COUNT}): "))
-            col -= 1
-        except ValueError:
-            print("Not a valid number...Try Again...")
+        col = input(f"Enter col of move(1-{args.numCols}): ")
+        if not isInt(col):
+            print("Not a valid int... Try Again...")
             continue
+        col = int(col) - 1
 
         if not game.getBoard().isValidMove(col):
             print("Invalid Move...")
@@ -66,5 +68,24 @@ def main():
         if game.isGameOver():
             print(f"GAME OVER! Player {currPlayer} Wins!")
             break
+
+def isInt(string):
+    try:
+        int(string)
+        return True
+    except:
+        return False
+    
+def main():
+    parser = argparse.ArgumentParser(description='Play a game of Connect 4')
+
+    parser.add_argument('--numRows', '-r',
+                        default=DEFAULT_NUM_ROW, type=int, help='Number of rows on the board')
+    parser.add_argument('--numCols', '-c',
+                        default=DEFAULT_NUM_COL, type=int, help='Number of columns on the board')
+
+    args = parser.parse_args()
+    playGame(args)
+    
 
 if __name__ == "__main__" : main()
