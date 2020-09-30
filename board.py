@@ -2,7 +2,7 @@ import numpy as np
 
 class Connect4Board:
     def __init__(self, numRows, numCols):
-        self._size = numRows, numCols
+        self._dimensions = numRows, numCols
         self._board = np.zeros((numRows, numCols))
         # Keeps track of open row index
         self._validRows = [numRows - 1 for i in range(numCols)]
@@ -14,10 +14,10 @@ class Connect4Board:
         return str(self._board)
 
     def numCols(self):
-        return self._size[1]
+        return self._dimensions[1]
     
     def numRows(self):
-        return self._size[0]
+        return self._dimensions[0]
 
     def isValidMove(self, col):
         return col >= 0 and col < self.numCols() and self._validRows[col] > - 1
