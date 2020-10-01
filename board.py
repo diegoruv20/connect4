@@ -13,6 +13,9 @@ class Connect4Board:
     def __str__(self):
         return str(self._board)
 
+    def getToken(self, row, col):
+        return int(self._board[row, col])
+
     def numCols(self):
         return self._dimensions[1]
     

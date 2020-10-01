@@ -56,11 +56,11 @@ class Connect4():
 
 
 def playGame(args):
-    if args.graphics:
+    if args.terminal:
+        playConnect4Terminal(args)
+    else:
         game = graphics.Connect4Game(args)
         game.playConnect4()
-    else:
-        playConnect4Terminal(args)
 
 
 def playConnect4Terminal(args):
@@ -108,7 +108,7 @@ def main():
                         default=DEFAULT_NUM_COL,
                         type=int,
                         help='Number of columns on the board')
-    parser.add_argument('-g', '--graphics', action='store_true')
+    parser.add_argument('-t', '--terminal', action='store_true')
 
     args = parser.parse_args()
     playGame(args)
