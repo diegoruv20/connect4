@@ -15,14 +15,15 @@ YELLOW = (255, 255, 0)
 BLUE = (0, 0, 255)
 
 class Connect4Game:
+    BUFFER = 30
     PlayerIdToColor = [BLACK, YELLOW, RED]
 
     def __init__(self, args):
         self._game = Connect4(args)
         self._gameOver = False
         self.tokenSize = 75
-        self._screenWidth = self._game.getBoard().numCols() * self.tokenSize
-        self._screenHeight = (self._game.getBoard().numRows() + 1) * self.tokenSize
+        self._screenWidth = self._game.getBoard().numCols() * self.tokenSize + Connect4Game.BUFFER
+        self._screenHeight = (self._game.getBoard().numRows() + 1) * self.tokenSize + Connect4Game.BUFFER
         self.screen = self.initializeGraphics()
 
     def playConnect4(self):
@@ -39,7 +40,7 @@ class Connect4Game:
     def initializeGraphics(self):
         pygame.init()
         screen = pygame.display.set_mode((self._screenWidth, self._screenHeight))
-        background = (255, 255, 255)
+        background = (0, 0, 0)
         screen.fill(background)
         return screen
 
@@ -57,15 +58,15 @@ class Connect4Game:
 
     def drawBoard(self):
         tokenRadius = self.tokenSize//2 - 5
+        p = (0, self._screenWidth - self.tokenSize)
+        pygame.draw.rect(self.screen, BLUE, ((0, self.tokenSize), (self._screenWidth, self._screenHeight - self.tokenSize)))
         board = self.getBoard()
-        for col in range(board.numCols()):
-            for row in range(board.numRows()):
-                coordinates = (row * self.tokenSize + self.tokenSize - 20, col * self.tokenSize + self.tokenSize)
-                tokenSize = (self.tokenSize, self.tokenSize)
-                pygame.draw.rect(self.screen, BLUE, (coordinates, tokenSize))
+        for row in range(board.numRows()):
+            for col in range(board.numCols()):
+                pos = (col * self.tokenSize + tokenRadius +10, row * self.tokenSize + self.tokenSize + tokenRadius+10)
                 playerId = board.getToken(row, col)
                 color = Connect4Game.PlayerIdToColor[playerId]
-                pygame.draw.circle(self.screen, color, coordinates, tokenRadius)
+                pygame.draw.circle(self.screen, color, pos, tokenRadius)
 
     def isGameOver(self):
         return self._gameOver
